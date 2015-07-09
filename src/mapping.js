@@ -24,7 +24,7 @@ function createMappingMenu(itemName, item, mappings, success) {
   var items = [];
   for (mapping of mappings) {
     items.push({
-      title: mapping.label
+      title: mapping.label || mapping.name
     });
   }
   var menu = new UI.Menu({
