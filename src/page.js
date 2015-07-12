@@ -66,6 +66,12 @@ function createItem(widget) {
           var setFromMapping = false;
           // if there's a mapping, look up the item value label in it
           var mappings = Util.arrayize(widget.mapping || widget.mappings);
+          
+          // If there are only two mapping values, create a normal item
+          if (mappings.length == 2) {
+            
+          }
+          
           for (mapping of mappings) {
             if (mapping.command == state) {
               item.subtitle = mapping.label;
@@ -126,21 +132,21 @@ function toggleSwitch(item, success) {
   }
 }
 
-function customToggleSwitch(item, success) {
+function toggleMappingSwitch(item, mapping, success) {
   var command;
-  if (item.state == 'OFF') {
-    command = 'ON';
-  } else if (item.state == 'ON') {
-    command = 'OFF';
-  } else if (!isNaN(item.state) && item.state <= 0) {
-    command = 'OFF';
-  } else if (!isNaN(item.state) && item.state >= 1) {
-    command = 'ON';
+  var newState;
+  // If it equals first mapping, toggle it to the second mapping
+  if (item.state == mapping[0].command) {
+    command = mapping[1].command;
+    newState = mapping[1].label;
+  // Otherwise default to the first mapping to account for complex 
+  //   scenarios such as groupings that may not always have a clear initial state
   } else {
-    command = 'OFF';
+    command = mapping[0].command;
+    newState = mapping[0].label;
   }
   if (command) {
-    Item.sendCommand(item, command, success);
+    Item.sendCommand(item, command, newState, success);
   }
 }
 
