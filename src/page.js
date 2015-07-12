@@ -62,30 +62,14 @@ function createItem(widget) {
         var state = widget.item.state;
         // fall back on the item state, but...
         item.subtitle = state;
-        if ('mapping' in widget || 'mappings' in widget) {
-          var setFromMapping = false;
+        var widgetMapping = (widget.mapping || widget.mappings);
+        if (widgetMapping) {
           // if there's a mapping, look up the item value label in it
-          var mappings = Util.arrayize(widget.mapping || widget.mappings);
-          
-          // If there are only two mapping values, create a normal item
-          if (mappings.length == 2) {
-            
-          }
-          
+          var mappings = Util.arrayize(widgetMapping);
           for (mapping of mappings) {
             if (mapping.command == state) {
               item.subtitle = mapping.label;
-              setFromMapping = true;
               break;
-            }
-          }
-          if (!setFromMapping && !isNaN(state)) {
-            for (mapping of mappings) {
-              if (mapping.label == "ON" && state > 0) {
-                item.subtitle = "ON";
-              } else if (mapping.label == "OFF" && state <= 0) {
-                item.subtitle = "OFF";
-              }
             }
           }
         }
@@ -207,9 +191,8 @@ function createPageMenu(data, resetSitemap) {
             toggleSwitch(widget.item, regenerateItem);
           } else if ('mapping' in widget || 'mappings' in widget) {
             var mappings = Util.arrayize(widget.mapping || widget.mappings);
-            
-            if(mappings.length == 2 && ((mappings[0].label == "ON" && mappings[1].label == "OFF") || (mappings[0].label == "OFF" && mappings[1].label == "ON"))) {
-              customToggleSwitch(widget.item, regenerateItem);
+            if (mappings.length == 2) {
+              toggleMappingSwitch(widget.item, mappings, regenerateItem)
             } else {
               Mapping.change(e.item.title, widget.item, mappings, regenerateItem);
             }
