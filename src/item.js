@@ -19,7 +19,7 @@ var Config = require('config');
 var ajax = require('ajax');
 var exports = module.exports = {};
 
-exports.sendCommand = function (item, command, newState, success) {
+exports.sendCommand = function (item, command, success) {
   Util.log('sending command: ' + command + ' to ' + item.name + ', url: ' + item.link);
   ajax(
     {
@@ -37,7 +37,7 @@ exports.sendCommand = function (item, command, newState, success) {
       Util.log('Successfully sent command: ' + data);
       // refresh local item state
       // XXX really, this should be done through http long polling
-      item.state = newState || command;
+      item.state = command;
       success();
     },
     
@@ -46,8 +46,4 @@ exports.sendCommand = function (item, command, newState, success) {
       Util.error('Comm Error', "Can't set state");
     }
   );
-};
-
-exports.sendCommand = function (item, command, success) {
-  sendCommand(item, command, null, success);
 };

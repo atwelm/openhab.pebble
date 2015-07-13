@@ -130,7 +130,7 @@ function toggleMappingSwitch(item, mapping, success) {
     newState = mapping[0].label;
   }
   if (command) {
-    Item.sendCommand(item, command, newState, success);
+    Item.sendCommand(item, command, success);
   }
 }
 
